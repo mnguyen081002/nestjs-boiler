@@ -5,12 +5,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { SharedModule } from "./shared/services/shared.module";
 import { ApiConfigService } from "./shared/services/api-config.service";
 import { ConfigModule } from "@nestjs/config";
-import { AuthModule } from "./modules/auth/auth.module";
+import { AuthModule } from "./modules/board/auth/auth.module";
 import { UserModule } from "./modules/user/user.module";
 import { JwtModule } from "@nestjs/jwt";
 import { ScheduleModule } from "@nestjs/schedule";
 import typeorm from "./config/typeorm";
 import { HealthModule } from "./modules/health/health.module";
+import { BoardGateway } from "./modules/board/board.gateway";
+import { BoardModule } from "./modules/board/board.module";
 
 @Module({
   imports: [
@@ -24,13 +26,13 @@ import { HealthModule } from "./modules/health/health.module";
       useFactory: async (configService: ApiConfigService) => configService.getPostgresConfig(),
       inject: [ApiConfigService],
     }),
-
     WinstonModule.forRoot(winstonConfig),
     ScheduleModule.forRoot(),
     AuthModule,
     UserModule,
     JwtModule,
     HealthModule,
+    BoardModule,
   ],
 })
 export class AppModule {}

@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 import * as utils from "../common/generate-nanoid";
 export class BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @CreateDateColumn()

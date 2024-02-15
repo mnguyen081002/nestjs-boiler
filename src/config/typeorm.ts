@@ -10,17 +10,13 @@ const config = {
   entities,
   synchronize: true, // NOTE: NEVER USE THIS
   autoLoadEntities: true, // TODO: remove this on production
-  // migrations,
-  // keepConnectionAlive: !this.isTest,
-  // dropSchema: this.isTest,
   ssl: process.env.DB_SSL,
-  type: "postgres",
+  type: "sqlite",
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  // migrationsRun: true,
   migrations: migrations,
   logging: process.env.ENABLE_ORM_LOGS === "true",
   maxQueryExecutionTime: -1,

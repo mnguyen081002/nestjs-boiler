@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { UserDto } from "../../user/dtos/user.dto";
-import { TokenPayloadDto } from "../../jwt/dtos/TokenPayloadDto";
+import { UserDto } from "../../../user/dtos/user.dto";
+import { TokenPayloadDto } from "../../../jwt/dtos/TokenPayloadDto";
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
-import { Social } from "../../../entities/user.entity";
+import { Social } from "../../../../entities/user.entity";
 
 export class LoginPayloadDto {
   user: UserDto;

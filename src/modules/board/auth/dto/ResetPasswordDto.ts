@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from "class-validator";
-import { Trim } from "../../../decorators";
+import { Trim } from "../../../../decorators";
 
 export class ResetPasswordDto {
   @IsString()
