@@ -30,18 +30,14 @@ export function validateHash(
   return bcrypt.compare(password, hash);
 }
 
-export async function queryPagination<X extends string[], T>({
+export async function queryPagination<T>({
   query,
   o,
 }: {
   query: SelectQueryBuilder<T>;
   o: PageOptionsDto;
-}): Promise<[T[], number]> {
-  return query
-    .limit(o.take)
-    .offset(o.skip)
-    .orderBy(`${query.alias}.${o.sort}`, o.order)
-    .getManyAndCount();
+}): Promise<T[]> {
+  return query.limit(o.take).offset(o.skip).orderBy(`${query.alias}.${o.sort}`, o.order).getMany();
 }
 
 export async function queryPaginationTakeSkip<X extends string[], T>({

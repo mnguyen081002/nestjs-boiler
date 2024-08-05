@@ -1,5 +1,6 @@
 import {
   IsEnum,
+  IsIn,
   IsOptional,
   IsString,
   ValidateIf,
@@ -18,6 +19,7 @@ import { OrderType } from "../enum/order";
 export class PageOptionsDto {
   @IsOptional()
   @IsString()
+  @IsIn(["created_at", "updated_at"])
   readonly sort?: string = "created_at";
 
   @EnumFieldOptional(() => OrderType, {
@@ -46,9 +48,6 @@ export class PageOptionsDto {
 
   @StringFieldOptional()
   readonly q?: string;
-
-  @NumberFieldOptional()
-  category_id?: number;
 
   constructor(partial: Partial<PageOptionsDto>) {
     Object.assign(this, partial);

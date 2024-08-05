@@ -35,7 +35,7 @@ export class I18nExceptionFilterPipe implements ExceptionFilter {
   }
 
   getExceptionTitle(code: number): string {
-    let keyCode = _.findKey(StatusCodesList, value => value === code);
+    let keyCode = _.findKey(StatusCodesList, (value) => value === code);
     if (!keyCode) {
       keyCode = ExceptionTitleList.InternalServerError;
     }
@@ -47,8 +47,7 @@ export class I18nExceptionFilterPipe implements ExceptionFilter {
     exception: HttpException,
     lang: string,
   ): Promise<CustomHttpExceptionResponse> {
-    const exceptionResponse =
-      exception.getResponse() as CustomHttpExceptionResponse;
+    const exceptionResponse = exception.getResponse() as CustomHttpExceptionResponse;
 
     const title = this.getExceptionTitle(exceptionResponse.code);
 
@@ -120,9 +119,7 @@ export class I18nExceptionFilterPipe implements ExceptionFilter {
             let validationKey: string = key,
               validationArgument: Record<string, any> = {};
             if (constraintsValidator.includes(key)) {
-              const { title, argument } = this.checkIfConstraintAvailable(
-                item.constraints[key],
-              );
+              const { title, argument } = this.checkIfConstraintAvailable(item.constraints[key]);
               validationKey = title;
               validationArgument = argument;
             }
@@ -132,10 +129,7 @@ export class I18nExceptionFilterPipe implements ExceptionFilter {
                 property: item.property,
               },
             };
-            if (
-              validationArgument &&
-              Object.keys(validationArgument).length > 0
-            ) {
+            if (validationArgument && Object.keys(validationArgument).length > 0) {
               args.args = {
                 ...validationArgument,
                 property: item.property,

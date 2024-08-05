@@ -9,8 +9,8 @@ import {
 } from "typeorm";
 import * as utils from "../common/generate-nanoid";
 export class BaseEntity {
-  @PrimaryColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @CreateDateColumn()
   created_at: Date;
@@ -20,9 +20,4 @@ export class BaseEntity {
 
   // @DeleteDateColumn({ nullable: true })
   // deleted_at: Date;
-
-  @BeforeInsert()
-  generateId() {
-    this.id = utils.generateId(9);
-  }
 }

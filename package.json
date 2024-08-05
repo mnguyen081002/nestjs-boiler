@@ -73,6 +73,7 @@
     "rimraf": "^5.0.1",
     "rxjs": "^7.8.1",
     "sjcl": "^1.0.8",
+    "slugify": "^1.6.6",
     "typeorm": "^0.3.17",
     "typeorm-transactional-cls-hooked": "^0.1.21",
     "winston": "^3.10.0"

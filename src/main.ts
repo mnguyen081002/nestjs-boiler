@@ -72,6 +72,6 @@ async function bootstrap() {
 
   const server = await app.listen(port, "0.0.0.0");
   server.setTimeout(300000);
-  console.info(`Server running on port ${port} 👍`);
+  console.info(`Server running on port ${port} 🚀`);
 }
 bootstrap();

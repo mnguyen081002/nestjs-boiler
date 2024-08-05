@@ -23,19 +23,15 @@ export class AuthController {
   ) {}
 
   @Post("login")
-  async login(@Body() userLoginDto: UserLoginDto): Promise<LoginPayloadDto> {
+  async login(@Body() userLoginDto: UserLoginDto): Promise<ResponseDefault<LoginPayloadDto>> {
     const userEntity = await this.authService.login(userLoginDto);
     const token = await this.jwtService.generateAuthToken(userEntity);
-    return new LoginPayloadDto(userEntity.toDto(), token);
+    return new ResponseDefault("Đăng nhập thành công", new LoginPayloadDto(userEntity.toDto(), token));
   }
 
   @Post("register")
-  async register(@Body() userRegisterDto: UserRegisterDto): Promise<UserDto> {
+  async register(@Body() userRegisterDto: UserRegisterDto): Promise<ResponseDefault<UserDto>> {
     const createdUser = await this.authService.register(userRegisterDto);
-    delete createdUser.password;
-    return {
-      ...createdUser,
-      isActive: true,
-    };
+    return new ResponseDefault("Đăng ký thành công", createdUser.toDto());
   }
 }

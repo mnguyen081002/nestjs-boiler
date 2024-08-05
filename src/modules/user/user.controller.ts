@@ -25,14 +25,13 @@ export class UserController {
 
   @Auth()
   @Get("/me")
-  getCurrentUser(@AuthUser() user: UserEntity): UserDto {
-    return user;
+  getCurrentUser(@AuthUser() user: UserEntity): ResponseDefault<UserDto> {
+    return new ResponseDefault("Lấy thông tin thành công", user.toDto());
   }
 
   @Get("/info/:id")
-  async getUserInfo(@Param("id") id: number) {
+  async getUserInfo(@Param("id") id: string): Promise<ResponseDefault<UserDto>> {
     const user = await this.userService.findOne({ id });
-
-    return new ResponseDefault("Lấy thông tin thành công", user);
+    return new ResponseDefault("Lấy thông tin thành công", user.toDto());
   }
 }

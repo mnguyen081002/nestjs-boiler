@@ -22,11 +22,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(args: { sub: number; type: TokenType }): Promise<UserEntity> {
+  async validate(args: { sub: string; type: TokenType }): Promise<UserEntity> {
     if (args.type !== TokenType.ACCESS_TOKEN) {
       throw new CustomHttpException({
+        code: StatusCodesList.TokenNotFound,
         message: "Token không hợp lệ",
-        code: StatusCodesList.UnauthorizedAccess,
         statusCode: HttpStatus.NOT_FOUND,
       });
     }
@@ -34,8 +34,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     if (!user) {
       throw new CustomHttpException({
+        code: StatusCodesList.UserNotFound,
         message: "Không tồn tại tài khoản",
-        code: StatusCodesList.NotFound,
         statusCode: HttpStatus.NOT_FOUND,
       });
     }

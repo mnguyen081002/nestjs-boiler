@@ -20,7 +20,7 @@ export class UserRegisterDto {
   // readonly firstName: string;
 
   @IsString()
-  @Length(8, 20, {
+  @Length(6, 20, {
     message: "Tên người dùng phải có độ dài từ 8 đến 20 ký tự",
   })
   @IsNotEmpty()
@@ -28,10 +28,12 @@ export class UserRegisterDto {
   readonly username: string;
 
   @IsString()
-  @IsEmail()
   @IsNotEmpty()
+  @Length(8, 30, {
+    message: "Tên phải có độ dài từ 8 đến 30 ký tự",
+  })
   @Trim()
-  readonly email: string;
+  readonly name: string;
 
   @IsString()
   @MinLength(6, {

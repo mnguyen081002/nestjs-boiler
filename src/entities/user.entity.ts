@@ -3,18 +3,17 @@ import { BaseEntity } from "../common/abstract.entity";
 import { UserRole } from "../common/enum/user-role";
 import { VirtualColumn } from "../decorators";
 import { UserDto } from "../modules/user/dtos/user.dto";
-import { UserSettingsEntity } from "./user-settings.entity";
 
 export type Social = "google" | "facebook" | "github";
 @Entity({ name: "users" })
 export class UserEntity extends BaseEntity {
-  @Column()
+  @Column({ unique: true })
   username: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column()
+  name: string;
 
-  @Column({ nullable: true })
+  @Column()
   password: string;
 
   @Column({ nullable: true })
@@ -63,8 +62,8 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: true })
   bank_code?: string;
 
-  @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
-  settings?: UserSettingsEntity;
+  // @OneToOne(() => UserSettingsEntity, (userSettings) => userSettings.user)
+  // settings?: UserSettingsEntity;
 
   // @BeforeInsert()
   // hashPassword() {

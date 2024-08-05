@@ -31,4 +31,7 @@ export const StatusCodesList = {
   UserNotFound: 1029,
   TokenNotFound: 1030,
   DiscountNotFound: 1031,
+  BlogNotFound: 1032,
+  SeriesNotFound: 1033,
+  TagNotFound: 1034,
 } as const;

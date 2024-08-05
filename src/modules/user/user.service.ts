@@ -16,7 +16,6 @@ import { UserRegisterDto } from "../auth/dto/UserRegisterDto";
 import type { UserDto, UserUpdateRequest } from "./dtos/user.dto";
 import type { UsersPageOptionsDto } from "./dtos/users-page-options.dto";
 import { Social, UserEntity } from "../../entities/user.entity";
-import { UserSettingsEntity } from "../../entities/user-settings.entity";
 import { PageMetaDto } from "../../common/dto/page-meta.dto";
 import { CustomHttpException } from "../../common/exception/custom-http.exception";
 import { StatusCodesList } from "../../common/constants/status-codes-list.constants";
@@ -27,13 +26,11 @@ import { RedisClientType } from "redis";
 export class UserService {
   private readonly logger: Logger = new Logger(UserService.name);
   constructor(
-    @InjectRepository(UserSettingsEntity)
-    private userSettingRepository: Repository<UserSettingsEntity>,
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  async findOneById(id: number, password: boolean = false): Promise<UserEntity | null> {
+  async findOneById(id: string, password: boolean = false): Promise<UserEntity | null> {
     const u = await this.userRepository.findOne({
       where: {
         id,
@@ -59,9 +56,6 @@ export class UserService {
   ): Promise<UserEntity | null> {
     const u = await this.userRepository.findOne({
       where: findData,
-      relations: {
-        settings: settings,
-      },
     });
 
     if (!password) delete u.password;
@@ -105,94 +99,59 @@ export class UserService {
   async createUser(userRegisterDto: UserRegisterDto): Promise<UserEntity> {
     const findUser = await this.userRepository.findOne({
       where: {
-        email: userRegisterDto.email,
+        username: userRegisterDto.username,
       },
-      relations: ["settings"],
     });
     const hashPassword = generateHash(userRegisterDto.password);
 
     if (!findUser) {
       const user = this.userRepository.create({ ...userRegisterDto, password: hashPassword });
-
       const userRecord = await this.userRepository.save(user);
-      const userSettings = this.userSettingRepository.create({
-        isEmailVerified: false,
-        user_id: userRecord.id,
-      });
-
-      user.settings = await this.userSettingRepository.save(userSettings);
       return user;
     }
 
-    if (findUser.settings.isEmailVerified) {
-      throw new CustomHttpException({
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: `Email ${userRegisterDto.email} đã tồn tại`,
-        code: StatusCodesList.EmailAlreadyExists,
-      });
-    } else {
-      await this.userRepository.update(findUser.id, {
-        ...userRegisterDto,
-        password: hashPassword,
-      });
-    }
-
-    return findUser;
-  }
-
-  async createUserSocial(user: {
-    email: string;
-    username: string;
-    avatar: string;
-    social: Social;
-  }): Promise<UserEntity> {
-    const u = this.userRepository.create({ ...user });
-
-    const userRecord = await this.userRepository.save(u);
-
-    const userSettings = this.userSettingRepository.create({
-      isEmailVerified: true,
-      user_id: userRecord.id,
+    throw new CustomHttpException({
+      code: StatusCodesList.EmailAlreadyExists,
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: `Username ${userRegisterDto.username} đã tồn tại`,
     });
-
-    u.settings = await this.userSettingRepository.save(userSettings);
-    return u;
   }
 
-  async getUsers(pageOptionsDto: UsersPageOptionsDto): Promise<PageDto<UserDto>> {
-    const q = this.userRepository
-      .createQueryBuilder("user")
-      .select([
-        "user.id",
-        "user.email",
-        "user.username",
-        "user.role",
-        "user.phone",
-        "user.created_at",
-        "user.status",
-        "user.avatar",
-        "user.updated_at",
-      ])
-      .leftJoinAndSelect("user.settings", "settings");
+  // async getUsers(pageOptionsDto: UsersPageOptionsDto): Promise<PageDto<UserDto>> {
+  //   const q = this.userRepository
+  //     .createQueryBuilder("user")
+  //     .select([
+  //       "user.id",
+  //       "user.email",
+  //       "user.username",
+  //       "user.role",
+  //       "user.phone",
+  //       "user.created_at",
+  //       "user.status",
+  //       "user.avatar",
+  //       "user.updated_at",
+  //     ])
+  //     .leftJoinAndSelect("user.settings", "settings");
 
-    pageOptionsDto.role && q.andWhere("user.role = :role", { role: pageOptionsDto.role });
-    pageOptionsDto.search &&
-      q.andWhere("user.username ILIKE :username", {
-        username: `%${pageOptionsDto.search}%`,
-      });
+  //   pageOptionsDto.role && q.andWhere("user.role = :role", { role: pageOptionsDto.role });
+  //   pageOptionsDto.search &&
+  //     q.andWhere("user.username ILIKE :username", {
+  //       username: `%${pageOptionsDto.search}%`,
+  //     });
+    
+  //   // TODO: Need optimize
+  //   const [users, itemCount] = await q
+  //     .take(pageOptionsDto.take)
+  //     .skip(pageOptionsDto.skip)
+  //     .orderBy(`user.${pageOptionsDto.sort}`, pageOptionsDto.order)
+  //     .getManyAndCount();
 
-    const [users, itemCount] = await q
-      .take(pageOptionsDto.take)
-      .skip(pageOptionsDto.skip)
-      .orderBy(`user.${pageOptionsDto.sort}`, pageOptionsDto.order)
-      .getManyAndCount();
-
-    return new PageDto<UserDto>(
-      users,
-      new PageMetaDto({
-        itemCount,
-        pageOptionsDto,
-      }),
-    );
-  }
+  //   return new PageDto<UserDto>(
+  //     users,
+  //     new PageMetaDto({
+  //       itemCount,
+  //       pageOptionsDto,
+  //     }),
+  //   );
+  // }
 }

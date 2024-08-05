@@ -1,8 +1,8 @@
-export class ResponseDefault {
+export class ResponseDefault<T> {
   message: string;
-  data: any;
+  data: T;
 
-  constructor(message?: string, data?: any) {
+  constructor(message: string, data?: T) {
     this.message = message ? message : "Thành công";
     this.data = data ? data : null;
   }

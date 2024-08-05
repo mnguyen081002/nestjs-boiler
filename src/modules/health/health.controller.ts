@@ -2,8 +2,6 @@ import { Controller, Get, Logger } from "@nestjs/common";
 import { Cron } from "@nestjs/schedule";
 import axios from "axios";
 import { ApiConfigService } from "../../shared/services/api-config.service";
-import { Flags } from "lighthouse";
-import lighthouse from "lighthouse";
 @Controller("/health")
 export class HealthController {
   constructor(private configService: ApiConfigService) {}
@@ -11,7 +9,7 @@ export class HealthController {
   @Get()
   getHello() {
     return {
-      api: "CodeDrafts API",
+      api: "N Blog API",
       version: "1.0.0",
       status: "OK",
       timestamp: new Date().toISOString(),

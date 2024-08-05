@@ -7,7 +7,10 @@ import { TokenType } from "../../common/constants/token-type";
 
 @Injectable()
 export class JwtService {
-  constructor(private configService: ApiConfigService, private nestJwtService: NestJwtService) {}
+  constructor(
+    private configService: ApiConfigService,
+    private nestJwtService: NestJwtService,
+  ) {}
   async generateAuthToken(user: UserEntity): Promise<TokenPayloadDto> {
     const access_token = this.generateToken(
       user.id,
@@ -40,15 +43,15 @@ export class JwtService {
   //   }
   //   return this.tokenRepo.save(tokenDoc);
   // }
-  generateVerifyEmailToken(user_id: number) {
+  generateVerifyEmailToken(user_id: string) {
     return this.generateToken(user_id, TokenType.VERIFY_EMAIL_TOKEN, 3600);
   }
 
-  generateResetPasswordToken(user_id: number) {
+  generateResetPasswordToken(user_id: string) {
     return this.generateToken(user_id, TokenType.RESET_PASSWORD_TOKEN, 3600);
   }
 
-  generateToken(user_id: number, type: TokenType, expiresIn: number | string) {
+  generateToken(user_id: string, type: TokenType, expiresIn: number | string) {
     const payload = { sub: user_id, type };
     return this.nestJwtService.sign(payload, {
       expiresIn: expiresIn,
